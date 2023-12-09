@@ -5,10 +5,14 @@ import com.example.myapplication.models.HomeResponseData
 import com.example.myapplication.models.LoginRequest
 import com.example.myapplication.models.LoginResponse
 import com.example.myapplication.models.PartnerData
+import com.example.myapplication.models.Product
+import com.example.myapplication.models.ProductDetailReq
 import com.example.myapplication.models.ProductResponse
 import com.example.myapplication.models.RegisterRequest
 import com.example.myapplication.models.RegisterResponse
 import com.example.myapplication.models.ResetUserRequest
+import com.example.myapplication.models.Review
+import com.example.myapplication.models.ReviewResponse
 import com.example.myapplication.models.UpdateUserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -58,4 +62,13 @@ interface ApiRoutes {
     @GET("product")
     fun getProducts(@Query("partner") name: String): Call<ProductResponse>
 
+    @POST("product")
+    fun getProductByName(@Body() payload: ProductDetailReq): Call<Product>
+
+//    QR ROUTER
+    @GET("qr")
+    fun getProductDataFromQR(@Query("productRef") ref: String): Call<Product>
+
+    @POST("qr")
+    fun postReviewProduct(@Body() payload: Review): Call<ReviewResponse>
 }
