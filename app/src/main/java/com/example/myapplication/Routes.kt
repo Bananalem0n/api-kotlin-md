@@ -1,9 +1,11 @@
 package com.example.myapplication
 
-import android.view.PixelCopy.Request
 import com.example.myapplication.models.GetUserResponse
+import com.example.myapplication.models.HomeResponseData
 import com.example.myapplication.models.LoginRequest
 import com.example.myapplication.models.LoginResponse
+import com.example.myapplication.models.PartnerData
+import com.example.myapplication.models.ProductResponse
 import com.example.myapplication.models.RegisterRequest
 import com.example.myapplication.models.RegisterResponse
 import com.example.myapplication.models.ResetUserRequest
@@ -16,6 +18,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiRoutes {
@@ -42,4 +45,17 @@ interface ApiRoutes {
 
     @POST("user/reset")
     fun resetUserData(@Body email: ResetUserRequest): Call<Unit>
+
+//    HOME ROUTER
+    @GET("home")
+    fun getHome(): Call<HomeResponseData>
+
+//    PARTNER ROUTER
+    @GET("partner/{name}")
+    fun getPartner(@Path("name") partnerName: String = "uwg"): Call<PartnerData>
+
+//    PRODUCT ROUTER
+    @GET("product")
+    fun getProducts(@Query("partner") name: String): Call<ProductResponse>
+
 }

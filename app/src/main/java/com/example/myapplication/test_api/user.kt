@@ -13,11 +13,23 @@ import retrofit2.Call
 import java.io.File
 
 
-fun testGetUser() {
-    val payload = "gugugu@gmail.com"
-    val call: Call<GetUserResponse> = apiService.getUserData(payload)
+// Constants
+val TEXT_PLAIN_MEDIA_TYPE = "text/plain".toMediaTypeOrNull()
+val IMAGE_MEDIA_TYPE = "image/*".toMediaTypeOrNull()
 
-    fetch(call,
+// Function to handle image file
+fun createImagePart(filePath: String): MultipartBody.Part {
+    val imageFile = File(filePath)
+    val image = imageFile.asRequestBody(IMAGE_MEDIA_TYPE)
+    return MultipartBody.Part.createFormData("image", imageFile.name, image)
+}
+
+fun testGetUser() {
+    val email = "gugugu@gmail.com"
+    val call: Call<GetUserResponse> = apiService.getUserData(email)
+
+    fetch(
+        call,
         success = { response ->
             // Handle successful response
             println(response)
@@ -30,16 +42,12 @@ fun testGetUser() {
 }
 
 fun updateUser() {
-    val uid = "3uckGesT74cxVyAjTb9n3uAOvhG3".toRequestBody("text/plain".toMediaTypeOrNull())
-    val email = "gugugu@gmail.com".toRequestBody("text/plain".toMediaTypeOrNull())
-    val displayName = "John Doe".toRequestBody("text/plain".toMediaTypeOrNull())
-    val phoneNumber = "+6281213224060".toRequestBody("text/plain".toMediaTypeOrNull())
+    val uid = "3uckGesT74cxVyAjTb9n3uAOvhG3".toRequestBody(TEXT_PLAIN_MEDIA_TYPE)
+    val email = "gugugu@gmail.com".toRequestBody(TEXT_PLAIN_MEDIA_TYPE)
+    val displayName = "John Doe".toRequestBody(TEXT_PLAIN_MEDIA_TYPE)
+    val phoneNumber = "+6281213224060".toRequestBody(TEXT_PLAIN_MEDIA_TYPE)
 
-    // image handling (change the path)
-    val imageFile = File("/home/bananalemon/Downloads/","image-removebg-preview.png")
-    val image = imageFile.asRequestBody("image/*".toMediaTypeOrNull())
-
-    val imagePart = MultipartBody.Part.createFormData("image", imageFile.name, image)
+    val imagePart = createImagePart("/home/bananalemon/Downloads/image-removebg-preview.png")
 
     val call: Call<UpdateUserResponse> = apiService.updateUserData(uid, email, displayName, imagePart, phoneNumber)
 
@@ -56,11 +64,11 @@ fun updateUser() {
     )
 }
 
+
 fun resetPasswordUser() {
     try {
         val email = ResetUserRequest("bananalemon021103@gmail.com")
         println(email)
-
         val call: Call<Unit> = apiService.resetUserData(email)
         val response = call.execute()
 
